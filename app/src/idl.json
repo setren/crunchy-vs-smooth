@@ -1,0 +1,101 @@
+{
+  "version": "0.1.0",
+  "name": "crunchy_vs_smooth",
+  "docs": [
+    "We'll update our declare_id! later. Once you run `anchor build`, your Program ID can be found in /target/idl/[your_project_name].json",
+    "Moving on to the #[program] macro below, this is where we define our program.",
+    "Each method inside here defines an RPC request handler (aka instruction handler) which can be invoked by clients"
+  ],
+  "instructions": [
+    {
+      "name": "initialize",
+      "docs": [
+        "The first parameter for every RPC handler is the Context struct. We define Initialize and Vote below at #[derive(Accounts)]"
+      ],
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "We mark vote_account with the init attribute, which creates a new account owned by the program",
+            "When using init, we must also provide:",
+            "payer, which funds the account creation",
+            "space, which defines how large the account should be",
+            "and the system_program which is required by the runtime",
+            "This enforces that our vote_account must be owned by the currently executing program, and that it should be deserialized to the VoteAccount struct below at #[account]"
+          ]
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "voteCrunchy",
+      "docs": [
+        "All account validation logic is handled below at the #[account(...)] macros, letting us just focus on the business logic"
+      ],
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Marking accounts as mut persists any changes made upon exiting the program, allowing our votes to be recorded"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "voteSmooth",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Marking accounts as mut persists any changes made upon exiting the program, allowing our votes to be recorded"
+          ]
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "VoteAccount",
+      "docs": [
+        "Here we define what our VoteAccount looks like",
+        "We define a struct with two public properties: crunchy and smooth",
+        "These properties will keep track of their respective votes as unsigned 64-bit integers",
+        "This VoteAccount will be passed inside each Transaction Instruction to record votes as they occur"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "crunchy",
+            "type": "u64"
+          },
+          {
+            "name": "smooth",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "address": "DGyRgNYvwJBoLx1wxjefgt87yQcS9mj341ZmEtViZLHS"
+  }
+}
